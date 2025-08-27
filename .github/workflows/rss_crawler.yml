@@ -1,0 +1,63 @@
+# url
+#각각 xml
+
+name: Scrape Notices
+
+on:
+  schedule:
+    - cron: "0 * * * *"      # 매 시간 실행
+  workflow_dispatch:          # 수동 실행
+
+permissions:
+  contents: read             
+  pages: write                # Pages 배포 권한
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust (stable)
+        uses: dtolnay/rust-toolchain@stable   
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y pkg-config libssl-dev
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Run scraper (write RSS files)
+        env:
+          RSS_DIR: etc-rss
+          RSS_WEVITY: etc-rss/wevity_rss.xml
+          RSS_CAMPUS: etc-rss/campus_pick_rss.xml
+          RSS_DACON:  etc-rss/dacon_rss.xml
+          RSS_MERGED: etc-rss/merged_rss.xml
+        run: cargo run --release
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3   # GitHub Pages용 업로드
+        with:
+          path: ./contest-rss                    # Pages 루트가 될 디렉터리
+
+  deploy:
+    needs: scrape
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4           # 공식 Pages 배포 액션
