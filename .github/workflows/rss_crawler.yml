@@ -48,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3   # GitHub Pages용 업로드
         with:
-          path: ./contest-rss                    # Pages 루트가 될 디렉터리
+          path: ./etc-rss                    # Pages 루트가 될 디렉터리
 
   deploy:
     needs: scrape
@@ -61,3 +61,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4           # 공식 Pages 배포 액션
+
