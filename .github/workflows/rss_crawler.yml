@@ -45,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./etc-rss   # RSS 결과물이 저장된 폴더
+          path: public   # RSS 결과물이 저장된 폴더
 
   deploy:
     needs: scrape
@@ -58,5 +58,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
 
 
