@@ -2,8 +2,8 @@ name: Scrape Notices
 
 on:
   schedule:
-    - cron: "0 * * * *"      # 매 시간 실행
-  workflow_dispatch:          # 수동 실행
+    - cron: "0 * * * *"      # 매 시간
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,14 +15,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  scrape:
+  build:                       # ← 이름 변경(의미상)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
       - name: Set up Rust (stable)
-        uses: dtolnay/rust-toolchain@stable   
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Cache cargo
         uses: Swatinem/rust-cache@v2
@@ -30,37 +33,38 @@ jobs:
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y pkg-config libssl-dev
 
-      - name: Build
+      - name: Build (optional, run will build anyway)
         run: cargo build --release
 
-      - name: Run scraper (write RSS files)
+      - name: Run scraper (write RSS files under public/etc-rss)
         env:
-          RSS_DIR: etc-rss
-          RSS_WEVITY: etc-rss/wevity_rss.xml
-          RSS_CAMPUS: etc-rss/campus_pick_rss.xml
-          RSS_DACON:  etc-rss/dacon_rss.xml
-          RSS_MERGED: etc-rss/merged_rss.xml
-        run: cargo run --release
+          RSS_DIR: public/etc-rss
+          RSS_WEVITY: public/etc-rss/wevity_rss.xml
+          RSS_CAMPUS: public/etc-rss/campus_pick_rss.xml
+          RSS_DACON:  public/etc-rss/dacon_rss.xml
+          RSS_MERGED: public/etc-rss/merged_rss.xml
+        run: |
+          mkdir -p public/etc-rss
+          cargo run --release
+          # (선택) 루트에서도 접근하고 싶으면 다음 한 줄 추가:
+          # cp public/etc-rss/merged_rss.xml public/rss.xml
 
-      - name: Upload artifact
+      - name: Debug list
+        run: ls -R public
+
+      - name: Upload artifact (deploy root = public)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: etc-rss   # RSS 결과물이 저장된 폴더
+          path: public
 
   deploy:
-    needs: scrape
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-
-
-
-
 
