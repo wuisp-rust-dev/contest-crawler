@@ -2,7 +2,7 @@ name: Scrape Notices
 
 on:
   schedule:
-    - cron: "0 * * * *"      # 매 시간
+    - cron: "0 * * * *"      # 매 시간 실행
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:                       # ← 이름 변경(의미상)
+  build:                       # 빌드 & 스크래핑
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -36,18 +36,18 @@ jobs:
       - name: Build (optional, run will build anyway)
         run: cargo build --release
 
-      - name: Run scraper (write RSS files under public/etc-rss)
+      - name: Run scraper (write RSS files under public/contest-rss)
         env:
-          RSS_DIR: public/etc-rss
-          RSS_WEVITY: public/etc-rss/wevity_rss.xml
-          RSS_CAMPUS: public/etc-rss/campus_pick_rss.xml
-          RSS_DACON:  public/etc-rss/dacon_rss.xml
-          RSS_MERGED: public/etc-rss/merged_rss.xml
+          RSS_DIR: public/contest-rss
+          RSS_WEVITY: public/contest-rss/wevity_rss.xml
+          RSS_CAMPUS: public/contest-rss/campus_pick_rss.xml
+          RSS_DACON:  public/contest-rss/dacon_rss.xml
+          RSS_MERGED: public/contest-rss/merged_rss.xml
         run: |
-          mkdir -p public/etc-rss
+          mkdir -p public/contest-rss
           cargo run --release
           # (선택) 루트에서도 접근하고 싶으면 다음 한 줄 추가:
-          # cp public/etc-rss/merged_rss.xml public/rss.xml
+          # cp public/contest-rss/merged_rss.xml public/rss.xml
 
       - name: Debug list
         run: ls -R public
@@ -60,11 +60,5 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+
 
