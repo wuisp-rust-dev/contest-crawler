@@ -12,10 +12,10 @@ GitHub Actions를 통해 주기적으로 자동 갱신됩니다.
 
 | 정보명        | 링크                              |
 | ------------- | --------------------------------- |
-| 모든 사이트 합병    | [https://wuisp-rust-dev.github.io/etc-crawler/etc-rss/merged_rss.xml](https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/merged_rss.xml) |
-| 위비티    | [https://wuisp-rust-dev.github.io/etc-crawler/etc-rss/wevity_rss.xml](https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/wevity_rss.xml) |
-| 데이콘    | [https://wuisp-rust-dev.github.io/etc-crawler/etc-rss/dacon_rss.xml](https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/dacon_rss.xml) |
-| 캠퍼스픽    | [https://wuisp-rust-dev.github.io/etc-crawler/etc-rss/campus_pick_rss.xml](https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/campus_pick_rss.xml) |
+| 모든 사이트 합병    | [https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/merged_rss.xml](https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/merged_rss.xml) |
+| 위비티    | [https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/wevity_rss.xml](https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/wevity_rss.xml) |
+| 데이콘    | [https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/dacon_rss.xml](https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/dacon_rss.xml) |
+| 캠퍼스픽    | [https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/campus_pick_rss.xml](https://wuisp-rust-dev.github.io/contest-crawler/etc-rss/campus_pick_rss.xml) |
 
 ---
 
