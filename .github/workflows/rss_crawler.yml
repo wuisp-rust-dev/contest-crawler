@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:                       # 빌드 & 스크래핑
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -46,7 +46,7 @@ jobs:
         run: |
           mkdir -p public/contest-rss
           cargo run --release
-          # (선택) 루트에서도 접근하고 싶으면 다음 한 줄 추가:
+          # (선택) 루트에서도 접근 가능하게 하려면:
           # cp public/contest-rss/merged_rss.xml public/rss.xml
 
       - name: Debug list
@@ -60,5 +60,11 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:                              # ← 반드시 이 들여쓰기가 필요합니다
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
